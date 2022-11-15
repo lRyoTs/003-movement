@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 20f;
-    public float backSpeed = 5f;
-    public float turnSpeed = 8f;
-    private float horizontalInput;
-    private float verticalInput;
+    [SerializeField] private float speed = 10f;
+    [SerializeField] private float turnSpeed = 1000f;
+    private float horizontalInput, verticalInput;
 
     // Start is called before the first frame update
     void Start()
@@ -24,15 +22,28 @@ public class PlayerController : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         //Get Vertical Input movemnt
         verticalInput = Input.GetAxis("Vertical");
-        
-        //Movement
-        transform.Translate(Vector3.forward * speed * Time.deltaTime * verticalInput);
-        transform.Translate(Vector3.right * turnSpeed * Time.deltaTime * horizontalInput);
-        transform.Rotate(Vector3.right * turnSpeed * Time.deltaTime * horizontalInput);
 
-        if (Input.GetKey(KeyCode.R)) {
-            transform.position = Vector3.zero;
+        //Get speed
+        if (verticalInput>=0) {
+            speed = 20f; //FRONTSPEED
+        } else {
+            speed = 5f; //BACKSPEED
         }
 
+
+        //Update Movement
+        transform.Translate(Vector3.forward * speed * Time.deltaTime * verticalInput);
+        //transform.Translate(Vector3.right * (speed/2) * Time.deltaTime * horizontalInput);
+        transform.Rotate(Vector3.up * (turnSpeed*speed)/5 * Time.deltaTime * horizontalInput);
+
+        if (Input.GetKey(KeyCode.R)) {
+            initiateChar();
+        }
+
+    }
+
+    //Initiate character
+    private void initiateChar() {
+        transform.SetPositionAndRotation(Vector3.zero,Quaternion.Euler(0,0,0));
     }
 }
